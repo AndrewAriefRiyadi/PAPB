@@ -6,16 +6,14 @@ class PembayaranCard extends StatelessWidget {
   final String month;
   final int status;
   final int amount;
-  final VoidCallback onPay;
-  final VoidCallback onViewReceipt;
+  final VoidCallback pressedAction;
 
   const PembayaranCard({
     super.key,
     required this.month,
     required this.status,
     required this.amount,
-    required this.onPay,
-    required this.onViewReceipt,
+    required this.pressedAction,
   });
 
   @override
@@ -76,11 +74,7 @@ class PembayaranCard extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             ElevatedButton(
-              onPressed: status == 1
-                          ? onViewReceipt 
-                          : status == 0
-                              ? onPay
-                              :onViewReceipt, 
+              onPressed: pressedAction,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accentColor,
               ),

@@ -78,7 +78,7 @@ class PembayaranPage extends StatelessWidget {
                       month: 'Oktober 2024',
                       status: 0,
                       amount: 700000,
-                      onPay: () {
+                      pressedAction: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -88,29 +88,27 @@ class PembayaranPage extends StatelessWidget {
                                       amount: 700000,
                                     )));
                       },
-                      onViewReceipt: () {
-                        // Aksi untuk melihat bukti bayar
-                      },
                     ),
                     PembayaranCard(
                       month: 'September 2024',
                       status: 2,
                       amount: 700000,
-                      onPay: () {
-                        // Aksi untuk membayar
-                      },
-                      onViewReceipt: () {
-                        // Aksi untuk melihat bukti bayar
+                      pressedAction: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PembayaranDetailPage(
+                                      month: 'September 2024',
+                                      status: 2,
+                                      amount: 700000,
+                                    )));
                       },
                     ),
                     PembayaranCard(
                       month: 'November 2024',
                       status: 1,
                       amount: 700000,
-                      onPay: () {
-                        // Aksi untuk membayar
-                      },
-                      onViewReceipt: () {
+                      pressedAction: (){
                         Navigator.push(
                             context,
                             MaterialPageRoute(

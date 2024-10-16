@@ -111,10 +111,41 @@ class PembayaranDetailPage extends StatelessWidget {
                             style: AppTextStyles.small),
                       ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    
+                    Visibility(
+                      visible: status == 0,
+                        child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.image),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Input Bukti Bayar',
+                                    style: AppTextStyles.small,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
