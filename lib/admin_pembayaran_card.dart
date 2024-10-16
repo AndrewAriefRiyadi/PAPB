@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
-class PembayaranCard extends StatelessWidget {
+class AdminPembayaranCard extends StatelessWidget {
+  final String name;
   final String month;
   final int status;
   final int amount;
   final VoidCallback pressedAction;
 
-  const PembayaranCard({
+  const AdminPembayaranCard({
     super.key,
+    required this.name,
     required this.month,
     required this.status,
     required this.amount,
@@ -24,13 +26,18 @@ class PembayaranCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       elevation: 5,
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
+            Text(
+              name,
+              style: AppTextStyles.medium.copyWith(
+                color: Colors.white,
+              ),
+            ),
             Text(
               month,
               style: AppTextStyles.medium.copyWith(
@@ -74,20 +81,22 @@ class PembayaranCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 5),
-            ElevatedButton(
-              onPressed: pressedAction,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentColor,
-              ),
-              child: Text(
-                status == 1
-                          ? 'Lihat Bukti Bayar' 
+            status != 0
+                ? ElevatedButton(
+                    onPressed: pressedAction,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentColor,
+                    ),
+                    child: Text(
+                      status == 1
+                          ? 'Lihat Bukti Bayar'
                           : status == 0
-                              ? 'Bayar' 
-                              :'Lihat Bukti Bayar',  
-                style: AppTextStyles.small.copyWith(color: Colors.white),
-              ),
-            ),
+                              ? 'Bayar'
+                              : 'Lihat Bukti Bayar',
+                      style: AppTextStyles.small.copyWith(color: Colors.white),
+                    ),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

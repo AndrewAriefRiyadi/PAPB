@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manajemen_asrama/admin_kamar_page.dart';
 import 'package:manajemen_asrama/home_page.dart';
 import 'package:manajemen_asrama/pembayaran_page.dart';
 import 'package:manajemen_asrama/keluhan_card.dart';
@@ -8,8 +9,8 @@ import 'bottom_nav_bar.dart';
 import 'penghuni_page.dart';
 import 'kamar_page.dart';
 
-class CreateKeluhanPage extends StatelessWidget {
-  const CreateKeluhanPage({super.key});
+class AdminKamarCreatePage extends StatelessWidget {
+  const AdminKamarCreatePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CreateKeluhanPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Pengajuan Keluhan',
+          'Kamar Create',
           style: AppTextStyles.medium,
         ),
       ),
@@ -46,7 +47,7 @@ class CreateKeluhanPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Judul',
+                    'Nama Kamar',
                     style: AppTextStyles.medium,
                   ),
                   TextField(
@@ -57,7 +58,7 @@ class CreateKeluhanPage extends StatelessWidget {
                       filled: true,
                       fillColor: AppColors.inputColor,
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'Judul',
+                      labelText: 'Nama Kamar',
                       labelStyle:
                           AppTextStyles.small.copyWith(color: Colors.white),
                       border: const OutlineInputBorder(
@@ -72,7 +73,7 @@ class CreateKeluhanPage extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    'Deskripsi',
+                    'Fasilitas',
                     style: AppTextStyles.medium,
                   ),
                   TextField(
@@ -85,7 +86,7 @@ class CreateKeluhanPage extends StatelessWidget {
                       filled: true,
                       fillColor: AppColors.inputColor,
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'Deskripsi',
+                      labelText: 'Fasilitas',
                       labelStyle:
                           AppTextStyles.small.copyWith(color: Colors.white),
                       border: const OutlineInputBorder(
@@ -99,6 +100,58 @@ class CreateKeluhanPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
+                  Text(
+                    'Harga',
+                    style: AppTextStyles.medium,
+                  ),
+                  TextField(
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
+                      filled: true,
+                      fillColor: AppColors.inputColor,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelText: 'Harga',
+                      labelStyle:
+                          AppTextStyles.small.copyWith(color: Colors.white),
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide.none),
+                    ),
+                    style: AppTextStyles.small.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Penghuni',
+                    style: AppTextStyles.medium,
+                  ),
+                  TextField(
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
+                      filled: true,
+                      fillColor: AppColors.inputColor,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelText: 'Penghuni',
+                      labelStyle:
+                          AppTextStyles.small.copyWith(color: Colors.white),
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide.none),
+                    ),
+                    style: AppTextStyles.small.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -107,11 +160,12 @@ class CreateKeluhanPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateKeluhanPage()));
+                                  builder: (context) =>
+                                      AdminKamarPage()));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              AppColors.redColor, // Warna latar tombol
+                              AppColors.greenColor, // Warna latar tombol
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize
@@ -123,7 +177,7 @@ class CreateKeluhanPage extends StatelessWidget {
                             ),
                             SizedBox(width: 8), // Jarak antara ikon dan teks
                             Text(
-                              'Kirim',
+                              'Submit',
                               style: AppTextStyles.small
                                   .copyWith(color: Colors.white), // Gaya teks
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manajemen_asrama/admin_home_page.dart';
 import 'package:manajemen_asrama/keluhan_page.dart';
 import 'package:manajemen_asrama/pembayaran_page.dart';
 import 'app_colors.dart';
@@ -16,7 +17,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(),
-      body: SingleChildScrollView( // Membungkus seluruh body dalam SingleChildScrollView
+      body: SingleChildScrollView(
+        // Membungkus seluruh body dalam SingleChildScrollView
         padding: const EdgeInsets.fromLTRB(16, 64, 16, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,8 +96,7 @@ class HomePage extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 15),
                     decoration: BoxDecoration(
                         border: BorderDirectional(
-                            bottom:
-                                BorderSide(color: AppColors.primaryColor))),
+                            bottom: BorderSide(color: AppColors.primaryColor))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -228,6 +229,22 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStatePropertyAll(AppColors.secondaryColor),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => AdminHomePage()));
+                },
+                child: Text(
+                  'Admin',
+                  style: AppTextStyles.small.copyWith(color: Colors.white),
+                ))
           ],
         ),
       ),

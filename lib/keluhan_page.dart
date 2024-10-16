@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:manajemen_asrama/create_keluhan_page.dart';
 import 'package:manajemen_asrama/home_page.dart';
 import 'package:manajemen_asrama/pembayaran_page.dart';
-import 'package:manajemen_asrama/user_keluhan_card.dart';
+import 'package:manajemen_asrama/keluhan_card.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'bottom_nav_bar.dart';

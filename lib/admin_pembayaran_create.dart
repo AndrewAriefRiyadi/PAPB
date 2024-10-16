@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:manajemen_asrama/admin_kamar_page.dart';
+import 'package:manajemen_asrama/admin_pembayaran_page.dart';
 import 'package:manajemen_asrama/home_page.dart';
 import 'package:manajemen_asrama/pembayaran_page.dart';
 import 'package:manajemen_asrama/keluhan_card.dart';
@@ -8,8 +10,8 @@ import 'bottom_nav_bar.dart';
 import 'penghuni_page.dart';
 import 'kamar_page.dart';
 
-class CreateKeluhanPage extends StatelessWidget {
-  const CreateKeluhanPage({super.key});
+class AdminPembayaranCreate extends StatelessWidget {
+  const AdminPembayaranCreate({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class CreateKeluhanPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Pengajuan Keluhan',
+          'Pembayaran Create',
           style: AppTextStyles.medium,
         ),
       ),
@@ -46,7 +48,7 @@ class CreateKeluhanPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Judul',
+                    'User',
                     style: AppTextStyles.medium,
                   ),
                   TextField(
@@ -57,7 +59,7 @@ class CreateKeluhanPage extends StatelessWidget {
                       filled: true,
                       fillColor: AppColors.inputColor,
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'Judul',
+                      labelText: 'User',
                       labelStyle:
                           AppTextStyles.small.copyWith(color: Colors.white),
                       border: const OutlineInputBorder(
@@ -72,20 +74,18 @@ class CreateKeluhanPage extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    'Deskripsi',
+                    'Tanggal Pembayaran',
                     style: AppTextStyles.medium,
                   ),
                   TextField(
                     cursorColor: Colors.white,
-                    maxLines: null,
-                    minLines: 5,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
                       filled: true,
                       fillColor: AppColors.inputColor,
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'Deskripsi',
+                      labelText: 'Tanggal Pembayaran',
                       labelStyle:
                           AppTextStyles.small.copyWith(color: Colors.white),
                       border: const OutlineInputBorder(
@@ -97,7 +97,7 @@ class CreateKeluhanPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -107,11 +107,11 @@ class CreateKeluhanPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateKeluhanPage()));
+                                  builder: (context) => AdminPembayaranPage()));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              AppColors.redColor, // Warna latar tombol
+                              AppColors.greenColor, // Warna latar tombol
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize
@@ -123,7 +123,7 @@ class CreateKeluhanPage extends StatelessWidget {
                             ),
                             SizedBox(width: 8), // Jarak antara ikon dan teks
                             Text(
-                              'Kirim',
+                              'Submit',
                               style: AppTextStyles.small
                                   .copyWith(color: Colors.white), // Gaya teks
                             ),

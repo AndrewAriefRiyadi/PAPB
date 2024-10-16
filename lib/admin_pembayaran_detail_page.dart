@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:manajemen_asrama/admin_pembayaran_page.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'package:image_input/image_input.dart';
 
-class PembayaranDetailPage extends StatelessWidget {
+class AdminPembayaranDetailPage extends StatelessWidget {
+  final String name;
   final String month;
   final int status;
   final int amount;
-  const PembayaranDetailPage({
+
+  const AdminPembayaranDetailPage({
     super.key,
+    required this.name,
     required this.month,
     required this.status,
     required this.amount,
@@ -98,8 +102,8 @@ class PembayaranDetailPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      'Guntur Wisnu Saputra',
+                    Text(
+                      name,
                       style: AppTextStyles.medium,
                     ),
                     const SizedBox(height: 10),
@@ -147,12 +151,59 @@ class PembayaranDetailPage extends StatelessWidget {
                             ),
                           ],
                         )),
-                    
                     status != 0
-                        ? 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [Image.asset('assets/images/bukti.png')],
+                          )
+                        : SizedBox(),
+                    status == 2
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AdminPembayaranPage()));
+                                },
+                                child: Text(
+                                  'Decline',
+                                  style: AppTextStyles.small
+                                      .copyWith(color: Colors.white),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.redColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        5), // Mengubah radius di sini
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AdminPembayaranPage()));
+                                },
+                                child: Text(
+                                  'Approve',
+                                  style: AppTextStyles.small
+                                      .copyWith(color: Colors.white),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.greenColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        5), // Mengubah radius di sini
+                                  ),
+                                ),
+                              )
+                            ],
                           )
                         : SizedBox(),
                   ],

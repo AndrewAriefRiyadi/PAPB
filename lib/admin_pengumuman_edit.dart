@@ -8,8 +8,8 @@ import 'bottom_nav_bar.dart';
 import 'penghuni_page.dart';
 import 'kamar_page.dart';
 
-class CreateKeluhanPage extends StatelessWidget {
-  const CreateKeluhanPage({super.key});
+class AdminPengumumanEdit extends StatelessWidget {
+  const AdminPengumumanEdit({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CreateKeluhanPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Pengajuan Keluhan',
+          'Pengumuman Edit',
           style: AppTextStyles.medium,
         ),
       ),
@@ -46,34 +46,11 @@ class CreateKeluhanPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Judul',
-                    style: AppTextStyles.medium,
-                  ),
-                  TextField(
-                    cursorColor: Colors.white,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20),
-                      filled: true,
-                      fillColor: AppColors.inputColor,
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'Judul',
-                      labelStyle:
-                          AppTextStyles.small.copyWith(color: Colors.white),
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide.none),
-                    ),
-                    style: AppTextStyles.small.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
                     'Deskripsi',
                     style: AppTextStyles.medium,
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
                   TextField(
                     cursorColor: Colors.white,
@@ -99,19 +76,41 @@ class CreateKeluhanPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
+                  Text(
+                    'Visiblitas',
+                    style: AppTextStyles.medium,
+                  ),
+                  ListTile(
+                    title: Text('Terlihat'),
+                    trailing: Radio<String>(
+                      value: 'Tidak Terlihat',
+                      groupValue: '',
+                      onChanged: (String? value) {
+                        
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Tidak Terlihat'),
+                    trailing: Radio<String>(
+                      value: 'Tidak Terlihat',
+                      groupValue: '',
+                      onChanged: (String? value) {
+                        
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CreateKeluhanPage()));
+                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              AppColors.redColor, // Warna latar tombol
+                              AppColors.greenColor, // Warna latar tombol
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize
