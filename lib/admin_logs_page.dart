@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:manajemen_asrama/admin_home_page.dart';
-import 'package:manajemen_asrama/admin_kamar_page.dart';
 import 'package:manajemen_asrama/admin_kamar_card.dart';
 import 'package:manajemen_asrama/admin_kamar_create.dart';
+import 'package:manajemen_asrama/admin_kamar_page.dart';
+import 'package:manajemen_asrama/admin_keluhan_card.dart';
 import 'package:manajemen_asrama/admin_keluhan_page.dart';
-import 'package:manajemen_asrama/admin_logs_page.dart';
 import 'package:manajemen_asrama/admin_pembayaran_page.dart';
-import 'package:manajemen_asrama/admin_penghuni_card.dart';
-import 'package:manajemen_asrama/admin_penghuni_create.dart';
+import 'package:manajemen_asrama/admin_penghuni_page.dart';
 import 'package:manajemen_asrama/home_page.dart';
 import 'package:manajemen_asrama/keluhan_page.dart';
 import 'package:manajemen_asrama/pembayaran_detail_page.dart';
@@ -18,8 +17,8 @@ import 'penghuni_page.dart';
 import 'pembayaran_card.dart';
 import 'kamar_page.dart';
 
-class AdminPenghuniPage extends StatelessWidget {
-  const AdminPenghuniPage({super.key});
+class AdminLogsPage extends StatelessWidget {
+  const AdminLogsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class AdminPenghuniPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Penghuni',
+          'Logs',
           style: AppTextStyles.medium,
         ),
       ),
@@ -39,31 +38,12 @@ class AdminPenghuniPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'List Penghuni',
+                  'List Logs',
                   style: AppTextStyles.large,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdminPenghuniCreatePage()));
-                  },
-                  child: Text(
-                    'Tambah',
-                    style: AppTextStyles.small.copyWith(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5), // Mengubah radius di sini
-                    ),
-                  ),
-                )
               ],
             ),
             SizedBox(
@@ -87,42 +67,12 @@ class AdminPenghuniPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AdminPenghuniCard(
+                    AdminKeluhanCard(
+                        title: 'Bayar',
                         name: 'Guntur Wisnu Saputra',
-                        kelamin: 'Laki-Laki',
-                        no_hp: '08215154534',
-                        status: 1,
-                        pressedAction: () {}),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    AdminPenghuniCard(
-                        name: 'Guntur Wisnu Saputra',
-                        kelamin: 'Laki-Laki',
-                        no_hp: '08215154534',
-                        status: 0,
-                        pressedAction: () {}),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    AdminPenghuniCard(
-                        name: 'Guntur Wisnu Saputra',
-                        kelamin: 'Laki-Laki',
-                        no_hp: '08215154534',
-                        status: 0,
-                        pressedAction: () {}),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    AdminPenghuniCard(
-                        name: 'Guntur Wisnu Saputra',
-                        kelamin: 'Laki-Laki',
-                        no_hp: '08215154534',
-                        status: 1,
-                        pressedAction: () {}),
-                    SizedBox(
-                      height: 10,
-                    ),
+                        description:
+                            'Melakukan pembayaran untuk bulan oktober.',
+                        date: '12 Oktober 2024'),
                   ],
                 ),
               ),
@@ -131,7 +81,7 @@ class AdminPenghuniPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: 2, // Index yang dipilih (misal 0 untuk halaman Home)
+        selectedIndex: 5, // Index yang dipilih (misal 0 untuk halaman Home)
         onItemTapped: (int index) {
           switch (index) {
             case 0:
@@ -142,6 +92,11 @@ class AdminPenghuniPage extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminKamarPage()));
               break;
+            case 2:
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminPenghuniPage()));
+              break;
+
             case 3:
               Navigator.push(
                   context,
@@ -149,13 +104,16 @@ class AdminPenghuniPage extends StatelessWidget {
                       builder: (context) => AdminPembayaranPage()));
               break;
             case 4:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AdminKeluhanPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminKeluhanPage()));
               break;
-            case 5:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AdminLogsPage()));
-              break;
+            // case 4:
+            //   Navigator.push(context,
+            //       MaterialPageRoute(builder: (context) => KeluhanPage()));
+            //   break;
+            // Tambahkan kasus lainnya sesuai kebutuhan
           }
         },
       ),

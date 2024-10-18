@@ -65,7 +65,7 @@ class PembayaranCard extends StatelessWidget {
                       status == 1
                           ? 'Lunas' // Ikon success untuk status 1
                           : status == 0
-                              ? 'Belum Lunas' // Ikon error untuk status 0
+                              ? 'Kosong' // Ikon error untuk status 0
                               : 'Diproses', // Ikon warning untuk status lainnya (misalnya 2)
                       style: AppTextStyles.small.copyWith(color: Colors.white),
                     ),

@@ -3,6 +3,7 @@ import 'package:manajemen_asrama/admin_home_page.dart';
 import 'package:manajemen_asrama/admin_kamar_card.dart';
 import 'package:manajemen_asrama/admin_kamar_create.dart';
 import 'package:manajemen_asrama/admin_keluhan_page.dart';
+import 'package:manajemen_asrama/admin_logs_page.dart';
 import 'package:manajemen_asrama/admin_pembayaran_page.dart';
 import 'package:manajemen_asrama/admin_penghuni_page.dart';
 import 'package:manajemen_asrama/home_page.dart';
@@ -143,6 +144,10 @@ class AdminKamarPage extends StatelessWidget {
             case 4:
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminKeluhanPage()));
+              break;
+            case 5:
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminLogsPage()));
               break;
           }
         },

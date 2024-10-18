@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:manajemen_asrama/admin_kamar_page.dart';
 import 'package:manajemen_asrama/admin_keluhan_page.dart';
+import 'package:manajemen_asrama/admin_logs_page.dart';
 import 'package:manajemen_asrama/admin_pembayaran_page.dart';
 import 'package:manajemen_asrama/admin_penghuni_page.dart';
 import 'package:manajemen_asrama/admin_pengumuman_edit.dart';
+import 'package:manajemen_asrama/home_page.dart';
 import 'package:manajemen_asrama/keluhan_page.dart';
 import 'package:manajemen_asrama/pembayaran_page.dart';
 import 'app_colors.dart';
@@ -87,7 +89,7 @@ class AdminHomePage extends StatelessWidget {
                     child: ElevatedButton(
                   onPressed: () {},
                   child: Text(
-                    'Status = Terlihat',
+                    'Terlihat',
                     style: AppTextStyles.small.copyWith(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -124,6 +126,19 @@ class AdminHomePage extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
+            ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStatePropertyAll(AppColors.secondaryColor),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: Text(
+                  'User',
+                  style: AppTextStyles.small.copyWith(color: Colors.white),
+                ))
           ],
         ),
       ),
@@ -148,6 +163,10 @@ class AdminHomePage extends StatelessWidget {
             case 4:
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminKeluhanPage()));
+              break;
+            case 5:
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminLogsPage()));
               break;
 
             // Tambahkan kasus lainnya sesuai kebutuhan

@@ -4,6 +4,7 @@ import 'package:manajemen_asrama/admin_kamar_page.dart';
 import 'package:manajemen_asrama/admin_kamar_card.dart';
 import 'package:manajemen_asrama/admin_kamar_create.dart';
 import 'package:manajemen_asrama/admin_keluhan_page.dart';
+import 'package:manajemen_asrama/admin_logs_page.dart';
 import 'package:manajemen_asrama/admin_pembayaran_card.dart';
 import 'package:manajemen_asrama/admin_pembayaran_create.dart';
 import 'package:manajemen_asrama/admin_pembayaran_detail_page.dart';
@@ -41,16 +42,21 @@ class AdminPembayaranPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'List Pembayaran',
-                  style: AppTextStyles.large,
+                Flexible(
+                  child: Text(
+                    'List Pembayaran',
+                    style: AppTextStyles.medium,
+                    overflow: TextOverflow
+                        .ellipsis, // Mengatasi teks yang terlalu panjang
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdminPembayaranCreate()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AdminPembayaranCreate()),
+                    );
                   },
                   child: Text(
                     'Tambah',
@@ -59,8 +65,7 @@ class AdminPembayaranPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5), // Mengubah radius di sini
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
                 )
@@ -165,7 +170,10 @@ class AdminPembayaranPage extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminKeluhanPage()));
               break;
-            // case 4:
+            case 5:
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminLogsPage()));
+              break; // case 4:
             //   Navigator.push(context,
             //       MaterialPageRoute(builder: (context) => KeluhanPage()));
             //   break;
