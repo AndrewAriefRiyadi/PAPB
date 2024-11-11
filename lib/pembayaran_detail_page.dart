@@ -91,6 +91,7 @@ class PembayaranDetailPage extends StatelessWidget {
                                         ? 'Kosong' // Ikon error untuk status 0
                                         : 'Proses', // Ikon warning untuk status lainnya (misalnya 2)
                                 style: AppTextStyles.small,
+                                overflow: TextOverflow.clip,
                               ),
                             ],
                           )
@@ -147,11 +148,9 @@ class PembayaranDetailPage extends StatelessWidget {
                             ),
                           ],
                         )),
-                    
                     status != 0
-                        ? 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [Image.asset('assets/images/bukti.png')],
                           )
                         : SizedBox(),
