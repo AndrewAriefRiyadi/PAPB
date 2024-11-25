@@ -10,7 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^4.0.3
+  http: ^1.2.2
   image_input: ^0.0.5
+  shared_preferences: ^2.2.0
 
 dev_dependencies:
   flutter_test:

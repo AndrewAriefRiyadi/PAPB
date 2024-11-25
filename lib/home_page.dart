@@ -7,11 +7,65 @@ import 'app_text_styles.dart';
 import 'kamar_page.dart';
 import 'penghuni_page.dart';
 import 'bottom_nav_bar.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 // import 'pengumuman_page.dart';
 // import 'keluhan_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Map<String, dynamic>? user;
+  Future<String?>? tokenFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    tokenFuture = _getToken();
+    _loadUser();
+  }
+
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token');
+  }
+
+  Future<Map<String, dynamic>?> _fetchAuthUser() async {
+    final token = await _getToken();
+    if (token == null) return null;
+
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/api/user'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Parsing JSON dan mencetak ke terminal
+      final data = jsonDecode(response.body);
+      print('Fetched user data: $data'); // Print untuk debugging
+      return data;
+    } else {
+      // Tangani kesalahan (misalnya token kedaluwarsa)
+      print('Failed to fetch user data: ${response.statusCode}');
+      return null;
+    }
+  }
+
+  Future<void> _loadUser() async {
+    final fetchedUser = await _fetchAuthUser();
+    setState(() {
+      user = fetchedUser;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +78,37 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Dormage', style: AppTextStyles.largeShadow),
-            const Row(
+            FutureBuilder<String?>(
+              future: tokenFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return Text(
+                    'Token: ${snapshot.data}',
+                    style: AppTextStyles.small,
+                  );
+                } else {
+                  return const Text('No token found');
+                }
+              },
+            ),
+            Row(
               children: [
-                Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-                Icon(
+                const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+                const Icon(
                   Icons.account_circle,
                   size: 24,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
-                  'Guntur Wisnu Saputra',
+                  user != null
+                      ? user!['name'] ?? 'Nama tidak tersedia'
+                      : 'Memuat...',
                   style: AppTextStyles.small,
-                )
+                ),
               ],
             ),
             const SizedBox(height: 10), // Jarak antara teks dan container

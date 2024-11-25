@@ -37,7 +37,7 @@ class WelcomePage extends StatelessWidget {
                   // Navigasi ke halaman baru
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
