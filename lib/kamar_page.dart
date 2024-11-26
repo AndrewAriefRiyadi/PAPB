@@ -6,9 +6,60 @@ import 'app_text_styles.dart';
 import 'bottom_nav_bar.dart';
 import 'penghuni_page.dart';
 import 'pembayaran_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
-class KamarPage extends StatelessWidget {
+class KamarPage extends StatefulWidget {
   const KamarPage({super.key});
+
+  @override
+  _KamarPageState createState() => _KamarPageState();
+}
+
+class _KamarPageState extends State<KamarPage> {
+  Map<String, dynamic>? kamar;
+  Future<String?>? tokenFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    tokenFuture = _getToken();
+    _loadUser();
+  }
+
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token');
+  }
+
+  Future<Map<String, dynamic>?> _fetchAuthUser() async {
+    final token = await _getToken();
+    if (token == null) return null;
+
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/api/user/kamar'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Fetched kamar data: $data'); // Print untuk debugging
+      return data;
+    } else {
+      print('Failed to fetch kamar data: ${response.statusCode}');
+      return null;
+    }
+  }
+
+  Future<void> _loadUser() async {
+    final fetchedKamar = await _fetchAuthUser();
+    setState(() {
+      kamar = fetchedKamar;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,70 +72,69 @@ class KamarPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        // Membungkus body dengan SingleChildScrollView
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Menampilkan nomor kamar
             Container(
-              padding: const EdgeInsets.all(10), // Padding dalam container
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white, // Warna latar belakang
-                borderRadius: BorderRadius.circular(10), // Sudut rounded
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25), // Warna shadow
-                    blurRadius: 4, // Blur shadow
-                    offset: const Offset(0, 4), // Posisi shadow
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 4,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      decoration: BoxDecoration(
-                          border: BorderDirectional(
-                              bottom:
-                                  BorderSide(color: AppColors.primaryColor))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Kamar 7',
-                            style: AppTextStyles.largeShadow,
-                          ),
-                        ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                      border: BorderDirectional(
+                        bottom: BorderSide(color: AppColors.primaryColor),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Fasilitas',
-                      style: AppTextStyles.small,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          kamar != null ? '${kamar!['nomor']}' : 'Memuat..',
+                          style: AppTextStyles.largeShadow,
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const UnorderedList(),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Fasilitas',
+                    style: AppTextStyles.small,
+                  ),
+                  const SizedBox(height: 10),
+                  // Menampilkan fasilitas dari JSON
+                  kamar != null
+                      ? _buildFasilitasList(kamar!['fasilitas'])
+                      : Text('...'),
+                  // _buildFasilitasList(kamar!['fasilitas']),
+                ],
               ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: 1, // Index yang dipilih (misal 0 untuk halaman Home)
+        selectedIndex: 1,
         onItemTapped: (int index) {
           switch (index) {
             case 0:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HomePage()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
               break;
             case 2:
               Navigator.push(context,
@@ -98,30 +148,19 @@ class KamarPage extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => KeluhanPage()));
               break;
-            // Tambahkan kasus lainnya sesuai kebutuhan
           }
         },
       ),
     );
   }
-}
 
-class UnorderedList extends StatelessWidget {
-  const UnorderedList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
+  // Widget untuk menampilkan fasilitas yang berupa list
+  Widget _buildFasilitasList(List<dynamic> fasilitas) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListItem(text: 'Kamar Mandi'),
-        ListItem(text: 'Kasur'),
-        ListItem(text: 'Lemari Pakaian'),
-        ListItem(text: 'Kursi'),
-        ListItem(text: 'Meja'),
-        ListItem(text: 'AC'),
-        ListItem(text: 'Wi-Fi'),
-      ],
+      children: fasilitas.map<Widget>((item) {
+        return ListItem(text: item);
+      }).toList(),
     );
   }
 }
@@ -135,7 +174,6 @@ class ListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Icon(Icons.arrow_right, size: 16), // Simbol bullet
         const SizedBox(width: 8), // Jarak antara bullet dan teks
