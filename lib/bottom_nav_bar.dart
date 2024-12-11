@@ -37,10 +37,6 @@ class BottomNavBar extends StatelessWidget {
           icon: Icon(Icons.thumb_down_alt_rounded),
           label: 'Keluhan',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.history),
-          label: 'Logs',
-        ),
       ],
       backgroundColor: AppColors.primaryColor,
       currentIndex: selectedIndex,

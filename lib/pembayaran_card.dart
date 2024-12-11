@@ -4,8 +4,8 @@ import 'app_text_styles.dart';
 
 class PembayaranCard extends StatelessWidget {
   final String month;
-  final int status;
-  final int amount;
+  final String status;
+  final String amount;
   final VoidCallback pressedAction;
 
   const PembayaranCard({
@@ -42,31 +42,27 @@ class PembayaranCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Nominal: Rp $amount',
+                  amount,
                   style: AppTextStyles.body.copyWith(color: Colors.white),
                 ),
                 Row(
                   children: [
                     Icon(
-                      status == 1
+                      status == 'Diterima'
                           ? Icons.check_circle // Ikon success untuk status 1
-                          : status == 0
+                          : status == 'Kosong'
                               ? Icons.error // Ikon error untuk status 0
                               : Icons
                                   .warning, // Ikon warning untuk status lainnya (misalnya 2)
-                      color: status == 1
+                      color: status == 'Diterima'
                           ? Colors.green // Warna hijau untuk success
-                          : status == 0
+                          : status == 'Kosong'
                               ? Colors.red // Warna merah untuk error
                               : Colors.orange, // Warna oranye untuk warning
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      status == 1
-                          ? 'Lunas' // Ikon success untuk status 1
-                          : status == 0
-                              ? 'Kosong' // Ikon error untuk status 0
-                              : 'Diproses', // Ikon warning untuk status lainnya (misalnya 2)
+                      status,
                       style: AppTextStyles.small.copyWith(color: Colors.white),
                     ),
                   ],

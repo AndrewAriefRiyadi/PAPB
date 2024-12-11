@@ -1,21 +1,163 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'app_colors.dart';
 import 'app_text_styles.dart';
-import 'package:image_input/image_input.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class PembayaranDetailPage extends StatelessWidget {
-  final String month;
-  final int status;
-  final int amount;
+class PembayaranDetailPage extends StatefulWidget {
+  final Map<String, dynamic>? user;
+  final String amount;
+  final String pembayaran_id;
+
   const PembayaranDetailPage({
     super.key,
-    required this.month,
-    required this.status,
+    required this.user,
     required this.amount,
+    required this.pembayaran_id,
   });
 
   @override
+  State<PembayaranDetailPage> createState() => _PembayaranDetailPageState();
+}
+
+class _PembayaranDetailPageState extends State<PembayaranDetailPage> {
+  File? _selectedImage;
+  Map<String, dynamic>? _pembayaranData;
+
+  @override
+  void initState() {
+    super.initState();
+    // Pastikan menggunakan widget.pembayaran_id di sini
+    _fetchPaymentData(widget.pembayaran_id);
+  }
+
+  // Fungsi untuk mengambil token
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token');
+  }
+
+  // Fungsi untuk mengambil data pembayaran terbaru dari API
+  Future<void> _fetchPaymentData(String pembayaran_id) async {
+    final token = await _getToken();
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Token tidak ditemukan, silakan login kembali")),
+      );
+      return;
+    }
+
+    // Mengonversi pembayaran_id ke String
+    final uri = Uri.parse(
+        'http://10.0.2.2:8000/api/pembayaran/$pembayaran_id'); // Menggunakan pembayaran_id sebagai bagian dari URL
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        _pembayaranData = data; // Menyimpan data pembayaran yang diperbarui
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Gagal mengambil data pembayaran")),
+      );
+    }
+  }
+
+  // Fungsi untuk memilih gambar
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  // Fungsi untuk mengunggah gambar ke server
+  Future<void> _uploadImage() async {
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Pilih gambar terlebih dahulu")),
+      );
+      return;
+    }
+
+    final token = await _getToken();
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Token tidak ditemukan, silakan login kembali")),
+      );
+      return;
+    }
+
+    final uri = Uri.parse('http://10.0.2.2:8000/api/user/upload_bukti');
+    final request = http.MultipartRequest('POST', uri);
+
+    request.headers['Authorization'] =
+        'Bearer $token'; // Menambahkan token ke header
+
+    request.fields['pembayaran_id'] = _pembayaranData!['id'].toString();
+    request.files.add(
+      await http.MultipartFile.fromPath('bukti_bayar', _selectedImage!.path),
+    );
+
+    final response = await request.send();
+
+    // Mengambil response sebagai string
+    final responseString = await response.stream.bytesToString();
+
+    // Periksa apakah response adalah JSON
+    if (response.headers['content-type']?.contains('application/json') ??
+        false) {
+      final responseJson =
+          jsonDecode(responseString); // Decode JSON jika response adalah JSON
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseJson['message'])),
+        );
+        setState(() {
+          _selectedImage = null;
+        });
+
+        // Setelah upload berhasil, ambil data pembayaran terbaru lagi
+        await _fetchPaymentData(
+            widget.pembayaran_id); // Pastikan menggunakan widget.pembayaran_id
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(responseJson['message'] ??
+                  "Gagal mengunggah bukti pembayaran")),
+        );
+      }
+    } else {
+      // Tangani jika response bukan JSON (misalnya HTML error)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Terjadi kesalahan di server atau jaringan.")),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_pembayaranData == null) {
+      // Menampilkan loading jika data belum diambil
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -25,142 +167,150 @@ class PembayaranDetailPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        // Membungkus body dengan SingleChildScrollView
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10), // Padding dalam container
-              decoration: BoxDecoration(
-                color: Colors.white, // Warna latar belakang
-                borderRadius: BorderRadius.circular(10), // Sudut rounded
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25), // Warna shadow
-                    blurRadius: 4, // Blur shadow
-                    offset: const Offset(0, 4), // Posisi shadow
-                  ),
-                ],
-              ),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      decoration: const BoxDecoration(
-                          border: BorderDirectional(
-                              bottom:
-                                  BorderSide(color: AppColors.primaryColor))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            month,
-                            style: AppTextStyles.largeShadow,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                status == 1
-                                    ? Icons
-                                        .check_circle // Ikon success untuk status 1
-                                    : status == 0
-                                        ? Icons
-                                            .error // Ikon error untuk status 0
-                                        : Icons
-                                            .warning, // Ikon warning untuk status lainnya (misalnya 2)
-                                color: status == 1
-                                    ? Colors.green // Warna hijau untuk success
-                                    : status == 0
-                                        ? Colors.red // Warna merah untuk error
-                                        : Colors
-                                            .orange, // Warna oranye untuk warning
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                status == 1
-                                    ? 'Lunas' // Ikon success untuk status 1
-                                    : status == 0
-                                        ? 'Kosong' // Ikon error untuk status 0
-                                        : 'Proses', // Ikon warning untuk status lainnya (misalnya 2)
-                                style: AppTextStyles.small,
-                                overflow: TextOverflow.clip,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Guntur Wisnu Saputra',
-                      style: AppTextStyles.medium,
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Kamar 7', style: AppTextStyles.small),
-                        Text('Rp ' + amount.toString(),
-                            style: AppTextStyles.small),
-                      ],
-                    ),
-                    Visibility(
-                        visible: status == 0,
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.image),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        'Input Bukti Bayar',
-                                        style: AppTextStyles.small,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                          ],
-                        )),
-                    status != 0
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Image.asset('assets/images/bukti.png')],
-                          )
-                        : SizedBox(),
-                  ],
-                ),
-              ),
-            ),
+            _buildPaymentDetails(),
+            const SizedBox(height: 20),
+            if (_pembayaranData!['path_bukti'] == null ||
+                _pembayaranData!['path_bukti'].isEmpty)
+              _buildUploadSection(),
+            if (_pembayaranData!['path_bukti'] != null &&
+                _pembayaranData!['path_bukti'].isNotEmpty)
+              _buildProofImage(_pembayaranData!['path_bukti']),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPaymentDetails() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 4,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(bottom: 15),
+            decoration: const BoxDecoration(
+              border: BorderDirectional(
+                bottom: BorderSide(color: AppColors.primaryColor),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _pembayaranData!['tanggal_tagihan'] ?? '-',
+                  style: AppTextStyles.largeShadow,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      _pembayaranData!['status'] == 'Diterima'
+                          ? Icons.check_circle
+                          : _pembayaranData!['status'] == 'Kosong'
+                              ? Icons.error
+                              : Icons.warning,
+                      color: _pembayaranData!['status'] == 'Diterima'
+                          ? Colors.green
+                          : _pembayaranData!['status'] == 'Kosong'
+                              ? Colors.red
+                              : Colors.orange,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      _pembayaranData!['status'],
+                      style: AppTextStyles.small,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Guntur Wisnu Saputra',
+            style: AppTextStyles.medium,
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Kamar 7', style: AppTextStyles.small),
+              Text(widget.amount, style: AppTextStyles.small),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUploadSection() {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: _pickImage,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.image),
+              SizedBox(width: 5),
+              Text('Pilih Gambar', style: AppTextStyles.small),
+            ],
+          ),
+        ),
+        if (_selectedImage != null)
+          Column(
+            children: [
+              const SizedBox(height: 10),
+              Image.file(
+                _selectedImage!,
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _uploadImage,
+                child: const Text('Submit Bukti Bayar',
+                    style: AppTextStyles.small),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget _buildProofImage(String path) {
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        Center(
+          child: Image.network(
+            path,
+            height: 150,
+            width: 150,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const Icon(
+              Icons.broken_image,
+              size: 150,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
