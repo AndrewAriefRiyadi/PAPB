@@ -295,12 +295,16 @@ class _PembayaranDetailPageState extends State<PembayaranDetailPage> {
   }
 
   Widget _buildProofImage(String path) {
+    const String baseUrl = 'http://10.0.2.2:8000/storage/';
+    final String fullPath =
+        '$baseUrl$path'; // Menggabungkan base URL dengan path gambar
+
     return Column(
       children: [
         const SizedBox(height: 20),
         Center(
           child: Image.network(
-            path,
+            fullPath,
             height: 150,
             width: 150,
             fit: BoxFit.cover,

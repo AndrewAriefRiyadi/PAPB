@@ -76,9 +76,9 @@ class PembayaranCard extends StatelessWidget {
                 backgroundColor: AppColors.accentColor,
               ),
               child: Text(
-                status == 1
+                status == 'Diterima'
                           ? 'Lihat Bukti Bayar' 
-                          : status == 0
+                          : status == 'Kosong'
                               ? 'Bayar' 
                               :'Lihat Bukti Bayar',  
                 style: AppTextStyles.small.copyWith(color: Colors.white),

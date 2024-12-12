@@ -23,12 +23,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? user;
   Future<String?>? tokenFuture;
+  List<Map<String, dynamic>> pembayaran = [];
 
   @override
   void initState() {
     super.initState();
     tokenFuture = _getToken();
-    _loadUser();
+    _loadData();
   }
 
   Future<String?> _getToken() async {
@@ -60,13 +61,38 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadUser() async {
+  Future<List<Map<String, dynamic>>> _fetchPembayaran(int userId) async {
+    final token = await _getToken();
+    if (token == null) return [];
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/api/user/pembayaran/$userId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return List<Map<String, dynamic>>.from(jsonDecode(response.body));
+    } else {
+      print('Failed to fetch pembayaran data: ${response.statusCode}');
+      return [];
+    }
+  }
+
+  Future<void> _loadData() async {
     final fetchedUser = await _fetchAuthUser();
     setState(() {
       user = fetchedUser;
     });
-  }
 
+    if (fetchedUser != null && fetchedUser['id'] != null) {
+      final fetchedPembayaran = await _fetchPembayaran(fetchedUser['id']);
+      setState(() {
+        pembayaran = fetchedPembayaran;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,23 +105,6 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Dormage', style: AppTextStyles.largeShadow),
-            FutureBuilder<String?>(
-              future: tokenFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  return Text(
-                    'Token: ${snapshot.data}',
-                    style: AppTextStyles.small,
-                  );
-                } else {
-                  return const Text('No token found');
-                }
-              },
-            ),
             Row(
               children: [
                 const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
@@ -179,146 +188,90 @@ class _HomePageState extends State<HomePage> {
                           'Pembayaran',
                           style: AppTextStyles.largeShadow,
                         ),
-                        Text(
-                          'see all',
-                          style: AppTextStyles.small,
-                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  ...pembayaran.map(
+                    (item) => Column(
                       children: [
-                        Container(
-                          width: 130,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Kamar 2',
-                                style: AppTextStyles.small,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 130,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    user!['kamar'],
+                                    style: AppTextStyles.small,
+                                  ),
+                                  Text(
+                                    item['tanggal_tagihan'],
+                                    style: AppTextStyles.body,
+                                  ),
+                                ],
                               ),
-                              Text(
-                                'October 2024',
-                                style: AppTextStyles.body,
-                              ),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              item['nominal'],
+                              style: AppTextStyles.small,
+                            ),
+                            Icon(
+                              item['status'] == "Kosong"
+                                  ? Icons.indeterminate_check_box_rounded
+                                  : item['status'] == "Diproses"
+                                      ? Icons.warning
+                                      : Icons.check_box_rounded,
+                              fill: 1,
+                              color: item['status'] == "Kosong"
+                                  ? Colors.red
+                                  : item['status'] == "Diproses"
+                                      ? Colors.orange
+                                      : Colors.green,
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Rp 7.000',
-                          style: AppTextStyles.small,
-                        ),
-                        Icon(
-                          Icons.indeterminate_check_box_rounded,
-                          fill: 1,
-                          color: Colors.red,
+                        SizedBox(
+                          height: 10,
                         )
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 130,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Kamar 2',
-                                style: AppTextStyles.small,
-                              ),
-                              Text(
-                                'September 2024',
-                                style: AppTextStyles.body,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          'Rp 700.000',
-                          style: AppTextStyles.small,
-                        ),
-                        Icon(
-                          Icons.check_box_rounded,
-                          fill: 1,
-                          color: Colors.green,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 130,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Kamar 2',
-                                style: AppTextStyles.small,
-                              ),
-                              Text(
-                                'Juli 2024',
-                                style: AppTextStyles.body,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          'Rp 700.000',
-                          style: AppTextStyles.small,
-                        ),
-                        Icon(
-                          Icons.check_box_rounded,
-                          fill: 1,
-                          color: Colors.green,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(AppColors.secondaryColor),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        'Bayar bulan ini',
-                        style:
-                            AppTextStyles.small.copyWith(color: Colors.white),
-                      ))
+                  // ElevatedButton(
+                  //     style: ButtonStyle(
+                  //       backgroundColor:
+                  //           WidgetStatePropertyAll(AppColors.secondaryColor),
+                  //     ),
+                  //     onPressed: () {},
+                  //     child: Text(
+                  //       'See all',
+                  //       style:
+                  //           AppTextStyles.small.copyWith(color: Colors.white),
+                  //     ))
                 ],
               ),
             ),
             SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStatePropertyAll(AppColors.secondaryColor),
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => AdminHomePage()));
-                },
-                child: Text(
-                  'Admin',
-                  style: AppTextStyles.small.copyWith(color: Colors.white),
-                ))
+            // ElevatedButton(
+            //     style: ButtonStyle(
+            //       backgroundColor:
+            //           WidgetStatePropertyAll(AppColors.secondaryColor),
+            //     ),
+            //     onPressed: () {
+            //       Navigator.pushReplacement(context,
+            //           MaterialPageRoute(builder: (context) => AdminHomePage()));
+            //     },
+            //     child: Text(
+            //       'Admin',
+            //       style: AppTextStyles.small.copyWith(color: Colors.white),
+            //     ))
           ],
         ),
       ),
