@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:manajemen_asrama/pembayaran_page.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 import 'dart:convert';
@@ -131,9 +132,14 @@ class _PembayaranDetailPageState extends State<PembayaranDetailPage> {
           _selectedImage = null;
         });
 
-        // Setelah upload berhasil, ambil data pembayaran terbaru lagi
-        await _fetchPaymentData(
-            widget.pembayaran_id); // Pastikan menggunakan widget.pembayaran_id
+        // Setelah upload berhasil, navigasi kembali ke PembayaranPage
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                PembayaranPage(), // Pastikan untuk memberikan data user yang diperlukan
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
