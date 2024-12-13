@@ -38,7 +38,7 @@ class _KamarPageState extends State<KamarPage> {
     if (token == null) return null;
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/user/kamar'),
+      Uri.parse('https://papb-andru.up.railway.app/api/user/kamar'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

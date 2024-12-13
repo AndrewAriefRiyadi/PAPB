@@ -38,7 +38,7 @@ class _KeluhanPageState extends State<KeluhanPage> {
 
   Future<Map<String, dynamic>?> _fetchAuthUser(String token) async {
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/user'),
+      Uri.parse('https://papb-andru.up.railway.app/api/user'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ class _KeluhanPageState extends State<KeluhanPage> {
 
   Future<List<dynamic>> _fetchComplaints(String token, int userId) async {
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/user/keluhan/$userId'),
+      Uri.parse('https://papb-andru.up.railway.app/api/user/keluhan/$userId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

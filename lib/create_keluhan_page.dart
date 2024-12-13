@@ -55,7 +55,7 @@ class _CreateKeluhanPageState extends State<CreateKeluhanPage> {
     try {
       final response = await http.post(
         Uri.parse(
-            'http://10.0.2.2:8000/api/user/insert_keluhan'), // Ganti dengan IP lokal atau server jika menggunakan perangkat fisik
+            'https://papb-andru.up.railway.app/api/user/insert_keluhan'), // Ganti dengan IP lokal atau server jika menggunakan perangkat fisik
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

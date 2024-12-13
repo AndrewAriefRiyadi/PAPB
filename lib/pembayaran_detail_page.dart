@@ -54,7 +54,7 @@ class _PembayaranDetailPageState extends State<PembayaranDetailPage> {
 
     // Mengonversi pembayaran_id ke String
     final uri = Uri.parse(
-        'http://10.0.2.2:8000/api/pembayaran/$pembayaran_id'); // Menggunakan pembayaran_id sebagai bagian dari URL
+        'https://papb-andru.up.railway.app/api/pembayaran/$pembayaran_id'); // Menggunakan pembayaran_id sebagai bagian dari URL
     final response = await http.get(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -102,7 +102,7 @@ class _PembayaranDetailPageState extends State<PembayaranDetailPage> {
       return;
     }
 
-    final uri = Uri.parse('http://10.0.2.2:8000/api/user/upload_bukti');
+    final uri = Uri.parse('https://papb-andru.up.railway.app/api/user/upload_bukti');
     final request = http.MultipartRequest('POST', uri);
 
     request.headers['Authorization'] =
@@ -301,7 +301,7 @@ class _PembayaranDetailPageState extends State<PembayaranDetailPage> {
   }
 
   Widget _buildProofImage(String path) {
-    const String baseUrl = 'http://10.0.2.2:8000/storage/';
+    const String baseUrl = 'https://papb-andru.up.railway.app/storage/';
     final String fullPath =
         '$baseUrl$path'; // Menggabungkan base URL dengan path gambar
 

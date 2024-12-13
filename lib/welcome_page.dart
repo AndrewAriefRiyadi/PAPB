@@ -49,23 +49,6 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigasi ke halaman baru
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Kuis1Page()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  minimumSize: const Size.fromHeight(40), // Membuat tombol memenuhi lebar ruangan
-                ),
-                child: const Text(
-                  'Kuis1',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
             ],
           ),
         ),

@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/login'),
+      Uri.parse('https://papb-andru.up.railway.app/api/login'),
       body: jsonEncode({
         'username': _usernameController.text,
         'password': _passwordController.text,

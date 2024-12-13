@@ -39,7 +39,7 @@ class _PenghuniPageState extends State<PenghuniPage> {
     if (token == null) return null;
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/user'),
+      Uri.parse('https://papb-andru.up.railway.app/api/user'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
